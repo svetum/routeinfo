@@ -228,15 +228,15 @@ class RouteInfo
 		};
 };
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
 	try
 	{
-		boost::program_options::options_description desc("Allowed options");
+		boost::program_options::options_description desc("Options");
 		desc.add_options()
 			("help", "produce help message")
 			("debug", boost::program_options::value<unsigned long>()->default_value(0), "set debug level")
-			("host", boost::program_options::value<std::string>(), "destination");
+			("destination", boost::program_options::value<std::string>(), "destination");
 		boost::program_options::variables_map vm;
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
 		boost::program_options::notify(vm);
@@ -246,7 +246,8 @@ int main(int argc, char** argv)
 			std::cout << desc << std::endl;
 			return 0;
 		}
-		if(!vm.count("host")) {
+		if(!vm.count("destination")) {
+			std::cout << desc << std::endl;
 			return 0;
 		}
 		
@@ -254,9 +255,9 @@ int main(int argc, char** argv)
 		unsigned long flags = 0x01;
 		LOG_INIT(flags);
 		*/
-		
+		std::cout << "4" << std::endl;
 		boost::asio::io_context io_context;
-		RouteInfo routeInfo(io_context, argv[1]);
+		RouteInfo routeInfo(io_context, vm["destination"].as<std::string>().c_str());
 		io_context.run();
 	}
 	catch (std::exception& e)
