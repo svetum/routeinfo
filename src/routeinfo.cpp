@@ -8,6 +8,9 @@
 #include <icmp_header.hpp>
 #include <ipv4_header.hpp>
 #include <udp_header.hpp>
+#include <logger.h>
+
+#include <boost/program_options.hpp>
 
 class RouteInfo 
 {
@@ -29,7 +32,6 @@ class RouteInfo
 		// send a packet to the destination
 		void sendPacket() 
 		{
-			if(ttl > 1) return;
 			// Create the UDP header.
 			udp_header udp;
 			udp.source_port(12345);
@@ -226,17 +228,33 @@ class RouteInfo
 		};
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
 	try
 	{
-		if (argc != 2)
+		boost::program_options::options_description desc("Allowed options");
+		desc.add_options()
+			("help", "produce help message")
+			("debug", boost::program_options::value<unsigned long>()->default_value(0), "set debug level")
+			("host", boost::program_options::value<std::string>(), "destination");
+		boost::program_options::variables_map vm;
+		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+		boost::program_options::notify(vm);
+		
+		if(vm.count("help")) 
 		{
-			std::cerr << "Usage: ping <host>" << std::endl;
-			std::cerr << "(You may need to run this program as root.)" << std::endl;
-			return 1;
+			std::cout << desc << std::endl;
+			return 0;
 		}
-
+		if(!vm.count("host")) {
+			return 0;
+		}
+		
+		/*
+		unsigned long flags = 0x01;
+		LOG_INIT(flags);
+		*/
+		
 		boost::asio::io_context io_context;
 		RouteInfo routeInfo(io_context, argv[1]);
 		io_context.run();

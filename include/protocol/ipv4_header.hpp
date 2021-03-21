@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <sstream>
 #include <boost/asio/ip/address_v4.hpp>
-#include <Utils.hpp>
+#include <utils.hpp>
 
 /*
 	Packet header for IPv4 - rfc791
@@ -44,6 +44,7 @@ class ipv4_header
 		ipv4_header() 
 		{ 
 			std::fill(buffer_.begin(), buffer_.end(), 0); 
+			std::fill(options_.begin(), options_.end(), 0); 
 		}
 
 		void version(uint8_t value) 
@@ -171,8 +172,6 @@ class ipv4_header
 		boost::asio::ip::address_v4 source_address()
 		{
 			return boost::asio::ip::address_v4({buffer_[12], buffer_[13], buffer_[14], buffer_[15]});
-			// 		boost::asio::ip::address_v4::bytes_type bytes = { { data[12], data[13], data[14], data[15] } };
-			// return boost::asio::ip::address_v4(bytes);
 		}
 
 		void destination_address(boost::asio::ip::address_v4 value)
@@ -213,7 +212,7 @@ class ipv4_header
 			return buffer_.size(); 
 		}
 
-		const boost::array<uint8_t, 60>& data() const
+		const boost::array<uint8_t, 20>& data() const
 		{ 
 			return buffer_;
 		}
@@ -227,16 +226,15 @@ class ipv4_header
 			if (options_length < 0 || options_length > 40) 
 				is.setstate(std::ios::failbit);
 			else {
-				is.read(reinterpret_cast<char*>(header.buffer_.data()) + 20, options_length);
+				is.read(reinterpret_cast<char*>(header.options_.data()), options_length);
 			}
 			return is;
 		}
 
 		std::string print() {
 			std::stringstream strm;
-			strm << "IPv4 Header | Header Length: " <<  +(buffer_[0] & 0xF) << ", Total Length: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
-			strm << std::dec;
-			strm << toHexFormat(buffer_[0]) << toHexFormat(buffer_[1]) << toHexFormat(buffer_[2]) << toHexFormat(buffer_[3]) << std::endl;
+			strm << "IPv4 Header" << std::endl;
+			strm << toHexFormat(buffer_[0]) << toHexFormat(buffer_[1]) << toHexFormat(buffer_[2]) << toHexFormat(buffer_[3]) << "| Header Length: " <<  +(buffer_[0] & 0xF) << ", Total Length: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
 			strm << toHexFormat(buffer_[4]) << toHexFormat(buffer_[5]) << toHexFormat(buffer_[6]) << toHexFormat(buffer_[7]) << std::endl;
 			strm << toHexFormat(buffer_[8]) << toHexFormat(buffer_[9]) << toHexFormat(buffer_[10]) << toHexFormat(buffer_[11]) << "| TTL: " << +buffer_[8] << std::endl;
 			strm << toHexFormat(buffer_[12]) << toHexFormat(buffer_[13]) << toHexFormat(buffer_[14]) << toHexFormat(buffer_[15]) << "| Src: " << +buffer_[12] << "."  << +buffer_[13] << "."  << +buffer_[14] << "."  << +buffer_[15] << std::endl;
@@ -246,7 +244,8 @@ class ipv4_header
 
 	private:
 
-		boost::array<uint8_t, 60> buffer_;
+		boost::array<uint8_t, 20> buffer_;
+		boost::array<uint8_t, 40> options_;
 };
 
 #endif
