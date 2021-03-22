@@ -1,7 +1,5 @@
-// icmp_header.hpp
-
-#ifndef ICMP_HEADER
-#define ICMP_HEADER
+#ifndef PROTOCOL_ICMP_HEADER
+#define PROTOCOL_ICMP_HEADER
 
 #include <istream>
 #include <ostream>
@@ -226,8 +224,8 @@ class icmp_header {
 		std::string print() {
 			std::stringstream strm;
 			strm << "ICMP Header" << std::endl;
-			strm << toHexFormat(buffer_[0]) << toHexFormat(buffer_[1]) << toHexFormat(buffer_[2]) << toHexFormat(buffer_[3]) << "| Type: " << type_desc[buffer_[0]] << ", Code: " << code_desc[buffer_[0]][buffer_[1]]<<  std::endl;
-			strm << toHexFormat(buffer_[4]) << toHexFormat(buffer_[5]) << toHexFormat(buffer_[6]) << toHexFormat(buffer_[7]) << std::endl;
+			strm << to_hex(buffer_[0]) << to_hex(buffer_[1]) << to_hex(buffer_[2]) << to_hex(buffer_[3]) << "| Type: " << type_desc[buffer_[0]] << ", Code: " << code_desc[buffer_[0]][buffer_[1]]<<  std::endl;
+			strm << to_hex(buffer_[4]) << to_hex(buffer_[5]) << to_hex(buffer_[6]) << to_hex(buffer_[7]) << std::endl;
 			return strm.str();
 		}
 		

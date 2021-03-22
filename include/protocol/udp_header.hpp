@@ -1,7 +1,5 @@
-// udp_Header.hpp
-
-#ifndef UDP_HEADER
-#define UDP_HEADER
+#ifndef PROTOCOL_UDP_HEADER
+#define PROTOCOL_UDP_HEADER
 
 #include <algorithm>
 #include <iomanip>
@@ -95,8 +93,8 @@ class udp_header
 		std::string print() {
 			std::stringstream strm;
 			strm << "UDP Header" << std::endl;
-			strm << toHexFormat(buffer_[0]) << toHexFormat(buffer_[1]) << toHexFormat(buffer_[2]) << toHexFormat(buffer_[3]) << "| Source port: " << ((buffer_[0] << 8) | buffer_[1]) << ", Target port: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
-			strm << toHexFormat(buffer_[4]) << toHexFormat(buffer_[5]) << toHexFormat(buffer_[6]) << toHexFormat(buffer_[7]) << std::endl;
+			strm << to_hex(buffer_[0]) << to_hex(buffer_[1]) << to_hex(buffer_[2]) << to_hex(buffer_[3]) << "| Source port: " << ((buffer_[0] << 8) | buffer_[1]) << ", Target port: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
+			strm << to_hex(buffer_[4]) << to_hex(buffer_[5]) << to_hex(buffer_[6]) << to_hex(buffer_[7]) << std::endl;
 			return strm.str();
 		}
 

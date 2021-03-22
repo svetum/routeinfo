@@ -1,7 +1,5 @@
-// ipv4_header.hpp
-
-#ifndef IPV4_HEADER
-#define IPV4_HEADER
+#ifndef PROTOCOL_IPV4_HEADER
+#define PROTOCOL_IPV4_HEADER
 
 #include <algorithm>
 #include <iomanip>
@@ -234,11 +232,11 @@ class ipv4_header
 		std::string print() {
 			std::stringstream strm;
 			strm << "IPv4 Header" << std::endl;
-			strm << toHexFormat(buffer_[0]) << toHexFormat(buffer_[1]) << toHexFormat(buffer_[2]) << toHexFormat(buffer_[3]) << "| Header Length: " <<  +(buffer_[0] & 0xF) << ", Total Length: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
-			strm << toHexFormat(buffer_[4]) << toHexFormat(buffer_[5]) << toHexFormat(buffer_[6]) << toHexFormat(buffer_[7]) << std::endl;
-			strm << toHexFormat(buffer_[8]) << toHexFormat(buffer_[9]) << toHexFormat(buffer_[10]) << toHexFormat(buffer_[11]) << "| TTL: " << +buffer_[8] << std::endl;
-			strm << toHexFormat(buffer_[12]) << toHexFormat(buffer_[13]) << toHexFormat(buffer_[14]) << toHexFormat(buffer_[15]) << "| Src: " << +buffer_[12] << "."  << +buffer_[13] << "."  << +buffer_[14] << "."  << +buffer_[15] << std::endl;
-			strm << toHexFormat(buffer_[16]) << toHexFormat(buffer_[17]) << toHexFormat(buffer_[18]) << toHexFormat(buffer_[19]) << "| Dst: " << +buffer_[16] << "."  << +buffer_[17] << "."  << +buffer_[18] << "."  << +buffer_[19] << std::endl;
+			strm << to_hex(buffer_[0]) << to_hex(buffer_[1]) << to_hex(buffer_[2]) << to_hex(buffer_[3]) << "| Header Length: " <<  +(buffer_[0] & 0xF) << ", Total Length: " << ((buffer_[2] << 8) | buffer_[3]) << std::endl;
+			strm << to_hex(buffer_[4]) << to_hex(buffer_[5]) << to_hex(buffer_[6]) << to_hex(buffer_[7]) << std::endl;
+			strm << to_hex(buffer_[8]) << to_hex(buffer_[9]) << to_hex(buffer_[10]) << to_hex(buffer_[11]) << "| TTL: " << +buffer_[8] << std::endl;
+			strm << to_hex(buffer_[12]) << to_hex(buffer_[13]) << to_hex(buffer_[14]) << to_hex(buffer_[15]) << "| Src: " << +buffer_[12] << "."  << +buffer_[13] << "."  << +buffer_[14] << "."  << +buffer_[15] << std::endl;
+			strm << to_hex(buffer_[16]) << to_hex(buffer_[17]) << to_hex(buffer_[18]) << to_hex(buffer_[19]) << "| Dst: " << +buffer_[16] << "."  << +buffer_[17] << "."  << +buffer_[18] << "."  << +buffer_[19] << std::endl;
 			return strm.str();
 		}
 
