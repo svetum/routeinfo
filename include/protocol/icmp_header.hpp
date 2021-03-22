@@ -21,7 +21,8 @@ class icmp_header {
 	
 	public:
 		
-		enum 
+		/* https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml */
+		enum icmp_type
 		{ 
 			echo_reply = 0, 
 			destination_unreachable = 3, 
@@ -35,7 +36,21 @@ class icmp_header {
 			info_request = 15,
 			info_reply = 16, 
 			address_request = 17, 
-			address_reply = 18 
+			address_reply = 18, 
+			traceroute = 30,
+			datagram_conversion_error = 31, 
+			mobile_host_redirect = 32, 
+			ipv6_where_are_you = 33,
+			ipv6_i_am_here = 34, 
+			mobile_registration_request = 35,
+			mobile_registration_reply = 36,
+			domain_name_request = 37,
+			domain_name_reply = 38,
+			skip = 39,
+			photuris = 40,
+			icmp_experimental_mobility = 41,
+			extended_echo_request = 42,
+			extended_echo_reply = 43
 		};
 		
 		const char* type_desc[44] = {
@@ -85,7 +100,6 @@ class icmp_header {
 			"Extended Echo Reply"
 		};
 
-		/* https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml */
 		const char* code_desc[44][17] = {
 			{"No Code", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}, 
 			{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
@@ -191,8 +205,8 @@ class icmp_header {
 			return (buffer_[6] << 8) | buffer_[7];
 		}
 	
-		/*
-		void calculate_checksum() {
+		template <typename Iterator>
+		void calculate_checksum(Iterator body_begin, Iterator body_end) {
 			unsigned int sum = ((buffer_[0] << 8) | buffer_[1]) + ((buffer_[4] << 8) | buffer_[5]) + ((buffer_[6] << 8) | buffer_[7]);
 			Iterator body_iter = body_begin;
 			while (body_iter != body_end) {
@@ -204,7 +218,7 @@ class icmp_header {
 			sum += (sum >> 16);
 			checksum(static_cast<uint16_t>(~sum));
 		}
-		*/ 
+		 
 	public: 
 	
 		std::size_t size()

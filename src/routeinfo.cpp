@@ -1,5 +1,6 @@
 #include <iostream>
 #include <logger.h>
+#include <icmp_probe.h>
 #include <udp_probe.h>
 
 #include <boost/program_options.hpp>
@@ -34,6 +35,10 @@ int main(int argc, char* argv[])
 		if(vm["probetype"].as<std::string>() == "udp")
 		{
 			udp_probe* probe = new udp_probe(io_context, vm["destination"].as<std::string>().c_str());
+			probe->start();
+		} else if(vm["probetype"].as<std::string>() == "icmp")
+		{
+			icmp_probe* probe = new icmp_probe(io_context, vm["destination"].as<std::string>().c_str());
 			probe->start();
 		}
 		io_context.run();
