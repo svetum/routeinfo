@@ -247,4 +247,53 @@ class icmp_header {
 		
 		boost::array<uint8_t, 8> buffer_;
 };
+
+
+class icmp_payload {
+	
+	public:
+
+		icmp_payload() 
+		{ 
+		}
+	  
+		void length(uint16_t value)
+		{ 
+			length_ = value;
+		}
+	  
+		uint16_t length()
+		{ 
+			return length_;
+		}
+		
+	public: 
+	
+		std::size_t size()
+		{ 
+			return buffer_.size(); 
+		}
+
+		const boost::array<uint8_t, 1472>& data() const 
+		{
+			return buffer_; 
+		}
+
+		friend std::istream& operator>>(std::istream& is, icmp_payload& payload) { 
+			return is.read(reinterpret_cast<char*>(payload.buffer_.data()), payload.length()); 
+		}
+		
+		std::string print() {
+			std::stringstream strm;
+			strm << "ICMP Payload" << std::endl;
+			strm << to_hex(buffer_[0]) << to_hex(buffer_[1]) << to_hex(buffer_[2]) << to_hex(buffer_[3]) << std::endl;
+			//strm << to_hex(buffer_[4]) << to_hex(buffer_[5]) << to_hex(buffer_[6]) << to_hex(buffer_[7]) << std::endl;
+			return strm.str();
+		}
+		
+	private:
+		
+		boost::array<uint8_t, 1472> buffer_;
+		uint16_t length_;
+};
 #endif

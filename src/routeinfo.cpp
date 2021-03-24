@@ -47,17 +47,16 @@ int main(int argc, char* argv[])
 			probe->start();
 		}
 
-		if(vm.count("tx") && vm.count("destination") && vm.count("port") && vm.count("hops") && vm.count("packets") && vm.count("interval") && vm.count("payload")) 
+		if(vm.count("tx") && vm.count("destination") && vm.count("port") && vm.count("hops") && vm.count("packets") && vm.count("interval") && vm.count("payload") && vm["tx"].as<std::string>() == "udp") 
 		{
-			if(vm["tx"].as<std::string>() == "udp") 
-			{
-				udp_tx* tx = new udp_tx(io_context, vm["destination"].as<std::string>().c_str(), vm["port"].as<uint16_t>(), vm["hops"].as<uint8_t>(), vm["packets"].as<uint32_t>(), vm["interval"].as<uint32_t>(), vm["payload"].as<uint16_t>());
-				tx->start();
-			} else if(vm["tx"].as<std::string>() == "icmp") 
-			{
-				icmp_tx* tx = new icmp_tx(io_context, vm["destination"].as<std::string>().c_str(), vm["port"].as<uint16_t>(), vm["hops"].as<uint8_t>(), vm["packets"].as<uint32_t>(), vm["interval"].as<uint32_t>(), vm["payload"].as<uint16_t>());
-				tx->start();
-			}
+			udp_tx* tx = new udp_tx(io_context, vm["destination"].as<std::string>().c_str(), vm["port"].as<uint16_t>(), vm["hops"].as<uint8_t>(), vm["packets"].as<uint32_t>(), vm["interval"].as<uint32_t>(), vm["payload"].as<uint16_t>());
+			tx->start();
+		} 
+		if(vm.count("tx") && vm.count("destination") && vm.count("port") && vm.count("hops") && vm.count("packets") && vm.count("interval") && vm.count("payload") && vm["tx"].as<std::string>() == "icmp") 
+		{
+			std::cout << "Strating icmp_tx" << std::endl;
+			icmp_tx* tx = new icmp_tx(io_context, vm["destination"].as<std::string>().c_str(), vm["hops"].as<uint8_t>(), vm["packets"].as<uint32_t>(), vm["interval"].as<uint32_t>(), vm["payload"].as<uint16_t>());
+			tx->start();
 		}
 		
 		io_context.run();

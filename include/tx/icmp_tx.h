@@ -2,14 +2,13 @@
 #define ICMP_TX
 
 #include <boost/asio.hpp>
-#include <boost/random.hpp>
 #include <raw.hpp>
 
 class icmp_tx
 {
 	public:
 		
-		icmp_tx(boost::asio::io_context& io_context, const char* destination, uint16_t port, uint8_t hops, uint32_t number_of_packets, uint32_t send_interval, uint16_t payload_size);
+		icmp_tx(boost::asio::io_context& io_context, const char* destination, uint8_t hops, uint32_t number_of_packets, uint32_t send_interval, uint16_t payload_size);
 		
 		void start();
 
@@ -23,7 +22,6 @@ class icmp_tx
 
 		boost::asio::basic_raw_socket<raw> raw_socket_;
 		std::string remote_end_point_;
-		uint16_t remote_end_point_port_;
 		uint8_t ttl_;
 		uint32_t number_of_packets_to_send_;
 		uint32_t send_interval_;
@@ -38,10 +36,11 @@ class icmp_tx
 		
 		uint16_t identifier_;
 		uint16_t sequence_number_;
-		boost::random::mt19937 gen_;
 		boost::asio::chrono::steady_clock::time_point timestamp_;
 		boost::asio::ip::icmp::resolver icmp_resolver_;
+		int counter_;
 			
+		void debug(const boost::asio::streambuf& buffer, std::size_t length);
 };
 
 #endif
